@@ -1,6 +1,12 @@
 #include <iostream>
+#include <QApplication>
+#include "src/Essentials/MainWindow.h"
 
-int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
+int main(int argc, char *argv[])
+{
+    QApplication app(argc, argv);
+    MainWindow PrOS_Window(1000,800);
+
+    PrOS_Window.show();
+    return QApplication::exec();
 }
