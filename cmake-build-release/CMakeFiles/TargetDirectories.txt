@@ -1,5 +1,0 @@
-F:/GitHub/PrOS/cmake-build-release/CMakeFiles/PrOS.dir
-F:/GitHub/PrOS/cmake-build-release/CMakeFiles/edit_cache.dir
-F:/GitHub/PrOS/cmake-build-release/CMakeFiles/rebuild_cache.dir
-F:/GitHub/PrOS/cmake-build-release/CMakeFiles/PrOS_autogen_timestamp_deps.dir
-F:/GitHub/PrOS/cmake-build-release/CMakeFiles/PrOS_autogen.dir
