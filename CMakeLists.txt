@@ -19,7 +19,13 @@ find_package(Qt6 COMPONENTS
 
 add_executable(PrOS main.cpp
         src/Essentials/MainWindow.cpp
-        src/Essentials/MainWindow.h)
+        src/Essentials/MainWindow.h
+        src/Essentials/CustomClass/ImageButton/ImageButton.cpp
+        src/Essentials/CustomClass/ImageButton/ImageButton.h
+        src/Essentials/CustomClass/TaskbarThemes/TaskBarThemes.cpp
+        src/Essentials/CustomClass/TaskbarThemes/TaskBarThemes.h
+        src/Essentials/CustomClass/TextLabel/TextLabel.cpp
+        src/Essentials/CustomClass/TextLabel/TextLabel.h)
 
 target_link_libraries(PrOS
         Qt::Core
