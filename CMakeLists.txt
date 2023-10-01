@@ -25,7 +25,11 @@ add_executable(PrOS main.cpp
         src/Essentials/CustomClass/TaskbarThemes/TaskBarThemes.cpp
         src/Essentials/CustomClass/TaskbarThemes/TaskBarThemes.h
         src/Essentials/CustomClass/TextLabel/TextLabel.cpp
-        src/Essentials/CustomClass/TextLabel/TextLabel.h)
+        src/Essentials/CustomClass/TextLabel/TextLabel.h
+        src/Essentials/Utils/GetTimeDate.cpp
+        src/Essentials/Utils/GetTimeDate.h
+        src/Essentials/CustomClass/ImageLabel/ImageLabel.cpp
+        src/Essentials/CustomClass/ImageLabel/ImageLabel.h)
 
 target_link_libraries(PrOS
         Qt::Core
