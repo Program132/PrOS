@@ -31,8 +31,26 @@ void MainWindow::createFile() {
     qDebug() << "Option sélectionnée : Créer un fichier";
 }
 
-void MainWindow::desktop(QVBoxLayout *layout) const {
+void MainWindow::showStartMenu() {
+    if (StarterMenu && StarterMenu->isVisible()) {
+        StarterMenu->setVisible(false);
+    } else {
+        StarterMenu = new StartMenu(this);
+        StarterMenu->move(this->StarterOSManager->x(), (this->height() - StarterMenu->height()) - 100);
+        StarterMenu->show();
+    }
+}
+
+void MainWindow::desktop() const {
     desktopWidget->setStyleSheet("background-image: url(" + projectPath + "/src/img/matrix_bg.png)");
+}
+
+void MainWindow::resizeEvent(QResizeEvent* event)
+{
+    QMainWindow::resizeEvent(event);
+    if (StarterMenu && StarterMenu->isVisible()) {
+        StarterMenu->move(this->StarterOSManager->x(), (this->height() - StarterMenu->height()) - 100);
+    }
 }
 
 void MainWindow::taskBar(QHBoxLayout *layout) {
@@ -49,7 +67,7 @@ void MainWindow::taskBar(QHBoxLayout *layout) {
     setWidgetFrame(themesWidget, "#5B5B5B", "#808080");
     setWidgetFrame(appWidget, "#5B5B5B", "#808080");
 
-    auto *prOSManagerButton = new ImageButton("", projectPath + "/src/img/onoff.png", "background: transparent;", appWidget);
+    StarterOSManager = new ImageButton("", projectPath + "/src/img/onoff.png", "background: transparent;", appWidget);
     auto *terminalButton = new ImageButton("", projectPath + "/src/img/terminal_app.png", "background: transparent;", appWidget);
 
 
@@ -99,7 +117,7 @@ void MainWindow::taskBar(QHBoxLayout *layout) {
     themesLayout->addWidget(theme_blue);
 
     auto *appLayout = new QHBoxLayout(appWidget);
-    appLayout->addWidget(prOSManagerButton);
+    appLayout->addWidget(StarterOSManager);
     appLayout->addWidget(terminalButton);
 
     layout->addWidget(appWidget);
@@ -125,4 +143,6 @@ void MainWindow::taskBar(QHBoxLayout *layout) {
     connect(theme_blue, &QPushButton::clicked, [=, this]() {
         desktopWidget->setStyleSheet("background-image: url(" + projectPath + "/src/img/blue_bg.png)");
     });
+
+    connect(StarterOSManager, &QPushButton::clicked, this, &MainWindow::showStartMenu);
 }
