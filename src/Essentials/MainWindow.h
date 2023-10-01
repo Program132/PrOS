@@ -3,17 +3,19 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QCoreApplication>
-#include <ctime>
 #include <QTimer>
 #include <QAbstractAnimation>
 #include <QPropertyAnimation>
 #include "CustomClass/ImageButton/ImageButton.h"
 #include "CustomClass/TaskbarThemes/TaskBarThemes.h"
 #include "CustomClass/TextLabel/TextLabel.h"
+#include "Utils/GetTimeDate.h"
+#include "CustomClass/ImageLabel/ImageLabel.h"
 
 class MainWindow : public QMainWindow
 {
 public:
+    QWidget *desktopWidget;
     QString projectPath = QCoreApplication::applicationDirPath();
 
     MainWindow() {
@@ -38,35 +40,34 @@ private:
     [[maybe_unused]] int h;
 
     void defineWindow() {
-        auto *desktopWidget = new QWidget(this);
-        auto *desktopLayout = new QVBoxLayout;
-        desktopWidget->setLayout(desktopLayout);
-
-        auto *taskBarWidget = new QWidget(this);
-        auto *taskBarLayout = new QHBoxLayout;
-        taskBarWidget->setLayout(taskBarLayout);
-        taskBar(taskBarLayout);
-
+        // Principal Elements :
         auto *mainLayout = new QVBoxLayout;
-        mainLayout->addWidget(desktopWidget);
-        mainLayout->addWidget(taskBarWidget, 1, Qt::AlignBottom);
-
         auto *centralWidget = new QWidget(this);
         centralWidget->setLayout(mainLayout);
         setCentralWidget(centralWidget);
+
+        desktopWidget = new QWidget(centralWidget);
+        auto *desktopLayout = new QVBoxLayout;
+        desktopWidget->setLayout(desktopLayout);
+
+        auto *taskBarWidget = new QWidget(centralWidget);
+        auto *taskBarLayout = new QHBoxLayout;
+        taskBarWidget->setLayout(taskBarLayout);
+
+        // Main
+
+        mainLayout->addWidget(desktopWidget,1);
+        mainLayout->addWidget(taskBarWidget);
+
+        // Calling definition
+        desktop(desktopLayout);
+        taskBar(taskBarLayout);
     }
 
     void taskBar(QHBoxLayout *layout) {
         // Time + Date Vars:
-        std::time_t rawtime;
-        std::tm *timeinfo;
-        char buffer[80];
-        std::time(&rawtime);
-        timeinfo = std::localtime(&rawtime);
-        std::strftime(buffer, sizeof(buffer), "%Y-%m-%d", timeinfo);
-        QString dateString(buffer);
-        std::strftime(buffer, sizeof(buffer), "%H:%M:%S", timeinfo);
-        QString timeString(buffer);
+        QString dateString = os_getDate();
+        QString timeString = os_getTime();
 
         // Define taskbar:
         auto *dateTimeWidget = new QWidget(this);
@@ -143,6 +144,20 @@ private:
             updateTime(dateText, timeText);
         });
         timer->start(1000);
+
+        connect(theme_matrix, &QPushButton::clicked, [=, this]() {
+            desktopWidget->setStyleSheet("background-image: url(" + projectPath + "/src/img/matrix_bg.png)");
+        });
+        connect(theme_purple, &QPushButton::clicked, [=, this]() {
+            desktopWidget->setStyleSheet("background-image: url(" + projectPath + "/src/img/purple_bg.png)");
+        });
+        connect(theme_blue, &QPushButton::clicked, [=, this]() {
+            desktopWidget->setStyleSheet("background-image: url(" + projectPath + "/src/img/blue_bg.png)");
+        });
+    }
+
+    void desktop(QVBoxLayout *layout) const {
+        desktopWidget->setStyleSheet("background-image: url(" + projectPath + "/src/img/matrix_bg.png)");
     }
 
     static void setWidgetFrame(QWidget *widget, const QString &startColor, const QString &endColor) {
