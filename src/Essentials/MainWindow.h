@@ -71,27 +71,39 @@ private:
         setWidgetFrame(themesWidget, "#5B5B5B", "#808080");
         setWidgetFrame(appWidget, "#5B5B5B", "#808080");
 
-        auto *prOSManagerButton = new ImageButton("", projectPath + "/src/img/onoff.png", "background: none;", appWidget);
+        auto *prOSManagerButton = new ImageButton("", projectPath + "/src/img/onoff.png", "background: transparent;", appWidget);
 
         auto *theme_matrix = new TaskbarThemes("Matrix Theme",
-                                               QString("font-weight: bold; background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 %1, stop:1 %2); border-radius: 5px; ")
+                                               QString("font-size: 14px; font-weight: bold; background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 %1, stop:1 %2); border-radius: 5px; ")
                                                .arg("#099718", "#037A0F"),
+                                               QString("font-size: 13px; font-weight: bold; background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 %1, stop:1 %2); border-radius: 5px; ")
+                                                       .arg("#099718", "#037A0F"),
                                                100, 30, themesWidget);
 
         auto *theme_purple = new TaskbarThemes("Purple Theme",
-                                               QString("font-weight: bold; background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 %1, stop:1 %2); border-radius: 5px; ")
+                                               QString("font-size: 14px; font-weight: bold; background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 %1, stop:1 %2); border-radius: 5px; ")
                                                .arg("#720997", "#46037A"),
+                                               QString("font-size: 13px; font-weight: bold; background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 %1, stop:1 %2); border-radius: 5px; ")
+                                                       .arg("#720997", "#46037A"),
                                                100, 30, themesWidget);
         auto *theme_blue = new TaskbarThemes("Blue Theme",
-                                             QString("font-weight: bold; background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 %1, stop:1 %2); border-radius: 5px; ")
+                                             QString("font-size: 14px; font-weight: bold; background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 %1, stop:1 %2); border-radius: 5px; ")
                                              .arg("#100CCA", "#4376F9"),
+                                             QString("font-size: 13px; font-weight: bold; background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 %1, stop:1 %2); border-radius: 5px; ")
+                                                     .arg("#100CCA", "#4376F9"),
                                              100, 30, themesWidget);
 
-        auto *dateText = new TextLabel(dateString, "font-size: 16px; color: white; font-weight: bold;", 100, 30, this);
-        auto *timeText = new TextLabel(timeString, "font-size: 16px; color: white; font-weight: bold;", 100, 30, this);
+        auto *dateText = new TextLabel(dateString,
+                                       "font-size: 16px; color: white; font-weight: bold;",
+                                       100, 30,
+                                       dateTimeWidget);
+        auto *timeText = new TextLabel(timeString,
+                                       "font-size: 16px; color: white; font-weight: bold;",
+                                       100, 30,
+                                       dateTimeWidget);
 
         auto *spacerLeft = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Preferred);
-        auto *spacerBetweenThemes = new QSpacerItem(20, 0, QSizePolicy::Fixed, QSizePolicy::Preferred);
+        auto *spacerBetweenThemes = new QSpacerItem(10, 0, QSizePolicy::Fixed, QSizePolicy::Preferred);
         auto *spacerRight = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Preferred);
 
         auto *dateTimeLayout = new QHBoxLayout(dateTimeWidget);
