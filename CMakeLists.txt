@@ -29,7 +29,9 @@ add_executable(PrOS main.cpp
         src/Essentials/Utils/GetTimeDate.cpp
         src/Essentials/Utils/GetTimeDate.h
         src/Essentials/CustomClass/ImageLabel/ImageLabel.cpp
-        src/Essentials/CustomClass/ImageLabel/ImageLabel.h)
+        src/Essentials/CustomClass/ImageLabel/ImageLabel.h
+        src/Essentials/UI/StarterMenu/StarterMenu.cpp
+        src/Essentials/UI/StarterMenu/StarterMenu.h)
 
 target_link_libraries(PrOS
         Qt::Core
