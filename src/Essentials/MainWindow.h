@@ -12,6 +12,7 @@
 #include "CustomClass/TextLabel/TextLabel.h"
 #include "Utils/GetTimeDate.h"
 #include "CustomClass/ImageLabel/ImageLabel.h"
+#include "UI/StarterMenu/StarterMenu.h"
 
 class MainWindow : public QMainWindow
 {
@@ -35,18 +36,22 @@ public:
 
 private slots:
     static void updateTime(QLabel* dateText, QLabel* timeText);
+    void showStartMenu();
 
 private:
     [[maybe_unused]] int w;
     [[maybe_unused]] int h;
+    ImageButton *StarterOSManager;
+    QWidget *StarterMenu;
 
     void createContextMenu();
     static void createFolder();
     static void createFile();
     void showDesktopContextMenu(const QPoint &pos);
     void taskBar(QHBoxLayout *layout);
-    void desktop(QVBoxLayout *layout) const;
+    void desktop() const;
     static void setWidgetFrame(QWidget *widget, const QString &startColor, const QString &endColor);
+    void updateStartMenuPosition(QResizeEvent *event);
 
     void defineWindow() {
         // Principal Elements :
@@ -69,11 +74,15 @@ private:
         mainLayout->addWidget(taskBarWidget);
 
         // Calling definition
-        desktop(desktopLayout);
+        desktop();
         taskBar(taskBarLayout);
 
+
+        // Events :
         desktopWidget->setContextMenuPolicy(Qt::CustomContextMenu);
         connect(desktopWidget, &QWidget::customContextMenuRequested, this, &MainWindow::showDesktopContextMenu);
         // QWidget::customContextMenuRequested = right click
     }
+
+    void resizeEvent(QResizeEvent *event);
 };
