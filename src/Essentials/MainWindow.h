@@ -4,6 +4,9 @@
 #include <QLabel>
 #include <QCoreApplication>
 #include <ctime>
+#include <QTimer>
+#include <QAbstractAnimation>
+#include <QPropertyAnimation>
 #include "CustomClass/ImageButton/ImageButton.h"
 #include "CustomClass/TaskbarThemes/TaskBarThemes.h"
 #include "CustomClass/TextLabel/TextLabel.h"
@@ -27,9 +30,12 @@ public:
         defineWindow();
     }
 
+private slots:
+    static void updateTime(QLabel* dateText, QLabel* timeText);
+
 private:
-    int w;
-    int h;
+    [[maybe_unused]] int w;
+    [[maybe_unused]] int h;
 
     void defineWindow() {
         auto *desktopWidget = new QWidget(this);
@@ -72,6 +78,8 @@ private:
         setWidgetFrame(appWidget, "#5B5B5B", "#808080");
 
         auto *prOSManagerButton = new ImageButton("", projectPath + "/src/img/onoff.png", "background: transparent;", appWidget);
+        auto *terminalButton = new ImageButton("", projectPath + "/src/img/terminal_app.png", "background: transparent;", appWidget);
+
 
         auto *theme_matrix = new TaskbarThemes("Matrix Theme",
                                                QString("font-size: 14px; font-weight: bold; background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 %1, stop:1 %2); border-radius: 5px; ")
@@ -79,7 +87,6 @@ private:
                                                QString("font-size: 13px; font-weight: bold; background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 %1, stop:1 %2); border-radius: 5px; ")
                                                        .arg("#099718", "#037A0F"),
                                                100, 30, themesWidget);
-
         auto *theme_purple = new TaskbarThemes("Purple Theme",
                                                QString("font-size: 14px; font-weight: bold; background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 %1, stop:1 %2); border-radius: 5px; ")
                                                .arg("#720997", "#46037A"),
@@ -93,6 +100,7 @@ private:
                                                      .arg("#100CCA", "#4376F9"),
                                              100, 30, themesWidget);
 
+
         auto *dateText = new TextLabel(dateString,
                                        "font-size: 16px; color: white; font-weight: bold;",
                                        100, 30,
@@ -101,6 +109,7 @@ private:
                                        "font-size: 16px; color: white; font-weight: bold;",
                                        100, 30,
                                        dateTimeWidget);
+
 
         auto *spacerLeft = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Preferred);
         auto *spacerBetweenThemes = new QSpacerItem(10, 0, QSizePolicy::Fixed, QSizePolicy::Preferred);
@@ -119,12 +128,21 @@ private:
 
         auto *appLayout = new QHBoxLayout(appWidget);
         appLayout->addWidget(prOSManagerButton);
+        appLayout->addWidget(terminalButton);
 
         layout->addWidget(appWidget);
         layout->addItem(spacerLeft);
         layout->addWidget(themesWidget);
         layout->addItem(spacerRight);
         layout->addWidget(dateTimeWidget);
+
+        // Events :
+
+        auto *timer = new QTimer(this);
+        connect(timer, &QTimer::timeout, [dateText, timeText] {
+            updateTime(dateText, timeText);
+        });
+        timer->start(1000);
     }
 
     static void setWidgetFrame(QWidget *widget, const QString &startColor, const QString &endColor) {
