@@ -3,6 +3,10 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QCoreApplication>
+#include <ctime>
+#include "CustomClass/ImageButton/ImageButton.h"
+#include "CustomClass/TaskbarThemes/TaskBarThemes.h"
+#include "CustomClass/TextLabel/TextLabel.h"
 
 class MainWindow : public QMainWindow
 {
@@ -11,15 +15,22 @@ public:
 
     MainWindow() {
         resize(800, 600);
+        this->w = 800;
+        this->h = 600;
         defineWindow();
     }
 
     MainWindow(int weight, int height) {
         resize(weight, height);
+        this->w = weight;
+        this->h = height;
         defineWindow();
     }
 
 private:
+    int w;
+    int h;
+
     void defineWindow() {
         auto *desktopWidget = new QWidget(this);
         auto *desktopLayout = new QVBoxLayout;
@@ -39,47 +50,73 @@ private:
         setCentralWidget(centralWidget);
     }
 
-    void taskBar(QHBoxLayout* layout) {
-        // Define taskbar :
-        auto *prOSManagerButton = new QPushButton("", this);
+    void taskBar(QHBoxLayout *layout) {
+        // Time + Date Vars:
+        std::time_t rawtime;
+        std::tm *timeinfo;
+        char buffer[80];
+        std::time(&rawtime);
+        timeinfo = std::localtime(&rawtime);
+        std::strftime(buffer, sizeof(buffer), "%Y-%m-%d", timeinfo);
+        QString dateString(buffer);
+        std::strftime(buffer, sizeof(buffer), "%H:%M:%S", timeinfo);
+        QString timeString(buffer);
 
-        QPixmap prOSManagerButtonPixMap(projectPath + "/src/img/onoff.png");
+        // Define taskbar:
+        auto *dateTimeWidget = new QWidget(this);
+        auto *themesWidget = new QWidget(this);
+        auto *appWidget = new QWidget(this);
 
-        QPixmap prOSManagerButtonScaledPixMap = prOSManagerButtonPixMap.scaled(30, 30);
-        QIcon prOSManagerButtonIcon(prOSManagerButtonScaledPixMap);
-        prOSManagerButton->setIcon(prOSManagerButtonIcon);
-        prOSManagerButton->setIconSize(prOSManagerButtonScaledPixMap.rect().size());
-        prOSManagerButton->setFixedSize(40, 40);
-        prOSManagerButton->show();
+        setWidgetFrame(dateTimeWidget, "#5B5B5B", "#808080");
+        setWidgetFrame(themesWidget, "#5B5B5B", "#808080");
+        setWidgetFrame(appWidget, "#5B5B5B", "#808080");
 
-        auto *theme_matrix = new QPushButton("Matrix Theme", this);
-        auto *theme_purple = new QPushButton("Purple Theme", this);
-        auto *theme_blue = new QPushButton("Blue Theme", this);
-        int maxButtonWidth = 100;
-        int buttonHeight = 40;
-        theme_matrix->setFixedSize(maxButtonWidth, buttonHeight);
-        theme_purple->setFixedSize(maxButtonWidth, buttonHeight);
-        theme_blue->setFixedSize(maxButtonWidth, buttonHeight);
-        theme_matrix->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-        theme_purple->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-        theme_blue->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+        auto *prOSManagerButton = new ImageButton("", projectPath + "/src/img/onoff.png", "background: none;", appWidget);
 
-        auto *dateText = new QLabel("Date", this);
-        auto *timeText = new QLabel("Time", this);
-        dateText->setFixedSize(maxButtonWidth, buttonHeight);
-        timeText->setFixedSize(maxButtonWidth, buttonHeight);
+        auto *theme_matrix = new TaskbarThemes("Matrix Theme",
+                                               QString("font-weight: bold; background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 %1, stop:1 %2); border-radius: 5px; ")
+                                               .arg("#099718", "#037A0F"),
+                                               100, 30, themesWidget);
 
+        auto *theme_purple = new TaskbarThemes("Purple Theme",
+                                               QString("font-weight: bold; background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 %1, stop:1 %2); border-radius: 5px; ")
+                                               .arg("#720997", "#46037A"),
+                                               100, 30, themesWidget);
+        auto *theme_blue = new TaskbarThemes("Blue Theme",
+                                             QString("font-weight: bold; background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 %1, stop:1 %2); border-radius: 5px; ")
+                                             .arg("#100CCA", "#4376F9"),
+                                             100, 30, themesWidget);
 
-        // Adding elements to layout :
-        layout->addWidget(prOSManagerButton);
-        layout->addStretch(30);
-        layout->addWidget(theme_matrix);
-        layout->addWidget(theme_purple);
-        layout->addWidget(theme_blue);
-        layout->addStretch(1);
-        layout->addWidget(dateText);
-        layout->addWidget(timeText);
-        layout->addStretch(1);
+        auto *dateText = new TextLabel(dateString, "font-size: 16px; color: white; font-weight: bold;", 100, 30, this);
+        auto *timeText = new TextLabel(timeString, "font-size: 16px; color: white; font-weight: bold;", 100, 30, this);
+
+        auto *spacerLeft = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Preferred);
+        auto *spacerBetweenThemes = new QSpacerItem(20, 0, QSizePolicy::Fixed, QSizePolicy::Preferred);
+        auto *spacerRight = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Preferred);
+
+        auto *dateTimeLayout = new QHBoxLayout(dateTimeWidget);
+        dateTimeLayout->addWidget(dateText);
+        dateTimeLayout->addWidget(timeText);
+
+        auto *themesLayout = new QHBoxLayout(themesWidget);
+        themesLayout->addWidget(theme_matrix);
+        themesLayout->addItem(spacerBetweenThemes);
+        themesLayout->addWidget(theme_purple);
+        themesLayout->addItem(spacerBetweenThemes);
+        themesLayout->addWidget(theme_blue);
+
+        auto *appLayout = new QHBoxLayout(appWidget);
+        appLayout->addWidget(prOSManagerButton);
+
+        layout->addWidget(appWidget);
+        layout->addItem(spacerLeft);
+        layout->addWidget(themesWidget);
+        layout->addItem(spacerRight);
+        layout->addWidget(dateTimeWidget);
     }
 
+    static void setWidgetFrame(QWidget *widget, const QString &startColor, const QString &endColor) {
+        widget->setObjectName("WidgetFrame");
+        widget->setStyleSheet(QString("#WidgetFrame { background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 %1, stop:1 %2); border-radius: 13px; }").arg(startColor, endColor));
+    }
 };
